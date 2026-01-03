@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merry Rizzmas - Technical Guide 1.20.1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            scroll-behavior: smooth; 
+            background: linear-gradient(180deg, #87ceeb 0%, #4a90e2 30%, #1e3a8a 70%, #0f172a 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url('https://i.pinimg.com/originals/33/c7/92/33c792633b93a8581b2741f767664b58.gif'),
+                url('https://mir-s3-cdn-cf.behance.net/project_modules/disp/e87665110031749.5fe1f9a3b51fc.gif'),
+                url('https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUybHBsdDVmMXpsa3RuZ2ZwMDE0bDBxZXN2ZG9zODc5ZnoxdzdtODk3cSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/imbTfdz5TWSsw/200w.gif'),
+                url('https://mir-s3-cdn-cf.behance.net/project_modules/disp/312c69107785679.5faebf644ae2c.gif');
+            background-position: 
+                10% 20%,
+                85% 15%,
+                15% 70%,
+                90% 75%;
+            background-size: 
+                200px 200px,
+                180px 180px,
+                150px 150px,
+                180px 180px;
+            background-repeat: no-repeat;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Снежинки */
+        @keyframes snowfall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0.8; }
+        }
+        
+        .snowflake {
+            position: fixed;
+            top: -10vh;
+            color: white;
+            font-size: 1.5em;
+            opacity: 0.8;
+            pointer-events: none;
+            animation: snowfall linear infinite;
+            z-index: 1000;
+            will-change: transform;
+        }
+        
+        /* Северное сияние */
+        @keyframes aurora {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.4; }
+        }
+        
+        .aurora {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200%;
+            height: 400px;
+            background: radial-gradient(ellipse at center, rgba(0,255,200,0.2) 0%, transparent 70%);
+            animation: aurora 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .bg-dark-card { 
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        
+        .glow-blue { 
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+        
+        .glow-blue:hover {
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+        
+        .glass-nav { 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(12px); 
+            border-bottom: 2px solid #e2e8f0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .step-number { 
+            font-size: 4rem; 
+            line-height: 1; 
+            font-weight: 900; 
+            opacity: 0.1; 
+            position: absolute; 
+            right: 20px; 
+            top: 10px; 
+        }
+        
+        /* Мерцающие звезды */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .star {
+            position: fixed;
+            color: white;
+            opacity: 0.5;
+            pointer-events: none;
+            animation: twinkle 3s ease-in-out infinite;
+            z-index: 999;
+        }
+        
+        /* Анимация появления карточек */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        /* Пульсация заголовка */
+        @keyframes pulse-glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(59, 130, 246, 0.5), 0 0 40px rgba(147, 51, 234, 0.3); }
+            50% { text-shadow: 0 0 30px rgba(59, 130, 246, 0.8), 0 0 60px rgba(147, 51, 234, 0.5); }
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        /* Hover эффекты */
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        /* Градиентные кнопки */
+        .btn-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-youtube {
+            background: linear-gradient(135deg, #FF0000 0%, #CC0000 100%);
+        }
+        
+        .btn-youtube:hover {
+            background: linear-gradient(135deg, #CC0000 0%, #FF0000 100%);
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.4);
+        }
+        
+        .btn-wiki {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .btn-wiki:hover {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-github {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        }
+        
+        .btn-github:hover {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-curseforge {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        }
+        
+        .btn-curseforge:hover {
+            background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4);
+        }
+    </style>
+</head>
+<body class="text-slate-900">
+    <!-- Северное сияние -->
+    <div class="aurora"></div>
+
+    <header class="bg-gradient-to-br from-slate-950 via-purple-900 to-slate-950 text-white py-24 px-6 text-center relative overflow-hidden">
+        <div class="relative z-10">
+            <h1 class="text-7xl font-black italic tracking-tighter mb-4 pulse-glow">🎄 MERRY RIZZMAS 🎄</h1>
+            <p class="text-blue-400 font-bold uppercase tracking-[0.4em] text-sm">Forge 1.20.1 Deployment System</p>
+        </div>
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+    </header>
+
+    <nav class="sticky top-0 z-50 glass-nav">
+        <div class="container mx-auto flex justify-center gap-10 py-5 font-black text-xs uppercase tracking-widest">
+            <a href="#install" class="hover:text-blue-600 transition">Установка</a>
+            <a href="#mods" class="hover:text-blue-600 transition">Список модов</a>
+            <a href="#guides" class="hover:text-blue-600 transition">Тех-анализ</a>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-16 relative z-10">
+
+        <section id="install" class="mb-32">
+            <h2 class="text-5xl font-black mb-12 text-center italic uppercase text-white">❄️ Полный цикл установки ❄️</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden border border-slate-100 hover-lift fade-in-up" style="animation-delay: 0.1s">
+                    <span class="step-number">01</span>
+                    <h4 class="text-xl font-black mb-4 flex items-center gap-2"><i data-lucide="trash-2" class="text-red-500"></i> Очистка</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Полностью <b>удалите всё содержимое</b> вашей папки <code>.minecraft</code>, чтобы избежать конфликтов версий и старых конфигов.</p>
+                </div>
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden border border-slate-100 hover-lift fade-in-up" style="animation-delay: 0.2s">
+                    <span class="step-number">02</span>
+                    <h4 class="text-xl font-black mb-4 flex items-center gap-2"><i data-lucide="download" class="text-blue-500"></i> Ядро</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">В <b>Legacy Launcher</b> выберите и скачайте версию <b>1.20.1 Forge</b>. Запустите её один раз и закройте.</p>
+                </div>
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden border border-slate-100 hover-lift fade-in-up" style="animation-delay: 0.3s">
+                    <span class="step-number">03</span>
+                    <h4 class="text-xl font-black mb-4 flex items-center gap-2"><i data-lucide="copy" class="text-green-500"></i> База</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Перенесите все из папок <code>mods</code> и <code>resourcepacks</code>в архиве в <code>.minecraft mods resoursepacks</code>.</p>
+                </div>
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden border border-slate-100 hover-lift fade-in-up" style="animation-delay: 0.4s">
+                    <span class="step-number">04</span>
+                    <h4 class="text-xl font-black mb-4 flex items-center gap-2"><i data-lucide="play" class="text-purple-500"></i> Старт</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Снова <b>запустите Майнкрафт</b>, дождитесь загрузки модов в главном меню и закройте игру.</p>
+                </div>
+                <div class="bg-gradient-to-br from-slate-900 to-purple-900 text-white p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden border border-white/10 lg:col-span-2 hover-lift fade-in-up" style="animation-delay: 0.5s">
+                    <span class="step-number text-white">05</span>
+                    <h4 class="text-xl font-black mb-4 flex items-center gap-2 text-blue-400"><i data-lucide="file-check"></i> Финализация Config</h4>
+                    <p class="text-sm opacity-80 leading-relaxed mb-4">Замените только указанные файлы в папке <code>config</code>, а также папки <code>shaderpacks</code> и <code>emotes</code>:</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-white/10 px-3 py-1 rounded-md text-[10px] font-mono">biomemusic.json</span>
+                        <span class="bg-white/10 px-3 py-1 rounded-md text-[10px] font-mono">fancymenu(папка)</span>
+                        <span class="bg-white/10 px-3 py-1 rounded-md text-[10px] font-mono">biomesoplenty(папка)</span>
+                        <span class="bg-white/10 px-3 py-1 rounded-md text-[10px] font-mono">emotecraft.json</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mods" class="mb-32">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+                <h2 class="text-4xl font-black italic uppercase text-white">⚙️ Моды в системе (24) ⚙️</h2>
+                <div class="relative w-full max-w-lg">
+                    <input type="text" id="modSearch" 
+                        placeholder="Поиск по моду..." 
+                        class="w-full px-8 py-5 bg-white rounded-2xl shadow-lg border-2 border-transparent focus:border-blue-500 outline-none text-lg font-bold"
+                        oninput="filterMods(this.value)">
+                    <i data-lucide="search" class="absolute right-6 top-5 text-slate-300"></i>
+                </div>
+            </div>
+            <div id="modList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+        </section>
+
+        <section id="guides" class="space-y-8">
+            <h2 class="text-5xl font-black text-center mb-16 italic uppercase text-white">🎮 Технический Анализ Экосистемы 🎮</h2>
+
+            <script>
+                const guideData = [
+                    {
+                        title: "Ancient Elements",
+                        sub: "Геологическая прогрессия",
+                        icon: "gem",
+                        color: "text-amber-400",
+                        bgIcon: "bg-amber-600",
+                        desc: "Многоуровневая система руд. Ключевой механизм: Mineral Compounder. Конечная цель: Аэонитовое снаряжение для битвы с боссом Ancient Elemental.",
+                        link: "https://youtu.be/3D_7w8BoYLM?si=y5AVhQhP6c3a9XON",
+                        label: "YOUTUBE",
+                        btnClass: "btn-youtube"
+                    },
+                    {
+                        title: "Biomes O' Plenty",
+                        sub: "Экологическая экспансия",
+                        icon: "mountain",
+                        color: "text-green-400",
+                        bgIcon: "bg-green-600",
+                        desc: "80+ биомов, интегрированных с системой Cold Sweat. Определенные ресурсы (Танзанит, Сапфир) жестко привязаны к климатическим зонам BOP.",
+                        link: "https://biomesoplenty.fandom.com/wiki/Biomes_O%27_Plenty_Wiki",
+                        label: "WIKI",
+                        btnClass: "btn-wiki"
+                    },
+                    {
+                        title: "Cold Sweat",
+                        sub: "Термодинамика",
+                        icon: "thermometer",
+                        color: "text-blue-400",
+                        bgIcon: "bg-blue-600",
+                        desc: "Система температурного выживания. Требует обязательной изоляции брони мехом козы через швейный стол для предотвращения фатального обморожения.",
+                        link: "https://youtu.be/fqtltdtS29c?si=ORyUXR7u6E0DBFYW",
+                        label: "YOUTUBE",
+                        btnClass: "btn-youtube"
+                    },
+                    {
+                        title: "Traveler's Backpack",
+                        sub: "Мобильная логистика",
+                        icon: "backpack",
+                        color: "text-orange-400",
+                        bgIcon: "bg-orange-600",
+                        desc: "Рюкзак Cow автоматически снимает дебафф 'Cosmic Shock'. Встроенные баки позволяют хранить жидкости для терморегуляции в пути.",
+                        link: "https://github.com/winderine/Travelers-Backpack-Recipes/blob/main/OriginalRecipes.md",
+                        label: "GITHUB",
+                        btnClass: "btn-github"
+                    },
+                    {
+                        title: "Etched",
+                        sub: "Акустическая Интеграция",
+                        icon: "disc",
+                        color: "text-purple-400",
+                        bgIcon: "bg-purple-600",
+                        desc: "Позволяет записывать кастомные аудиопотоки через URL на игровые пластинки. Создает уникальный звуковой ландшафт на вашей базе.",
+                        link: "https://youtu.be/Zi1XB0YM-EE?si=qtbTsKPwSxgS4Ziw",
+                        label: "YOUTUBE",
+                        btnClass: "btn-youtube"
+                    },
+                    {
+                        title: "When Dungeons Arise",
+                        sub: "Масштабные структуры",
+                        icon: "castle",
+                        color: "text-red-400",
+                        bgIcon: "bg-red-600",
+                        desc: "Массивные данжи и замки с уникальной архитектурой. Сложные лабиринты с ценными наградами и опасными противниками.",
+                        link: "https://www.curseforge.com/minecraft/mc-mods/when-dungeons-arise",
+                        label: "CURSEFORGE",
+                        btnClass: "btn-curseforge"
+                    },
+                    {
+                        title: "Immortal Gingerbread",
+                        sub: "Праздничные существа",
+                        icon: "cookie",
+                        color: "text-pink-400",
+                        bgIcon: "bg-pink-600",
+                        desc: "Пряничные человечки и праздничные мобы. Добавляет новогоднее настроение и уникальные дропы для крафта.",
+                        link: "https://www.curseforge.com/minecraft/mc-mods/immortal-gingerbread",
+                        label: "CURSEFORGE",
+                        btnClass: "btn-curseforge"
+                    }
+                ];
+
+                function renderGuides() {
+                    const container = document.getElementById('guides');
+                    guideData.forEach((g, i) => {
+                        container.innerHTML += `
+                            <div class="bg-dark-card rounded-[3rem] p-10 text-white glow-blue relative overflow-hidden transition-all hover:border-white/20 hover-lift">
+                                <div class="flex items-center gap-6 mb-10">
+                                    <div class="${g.bgIcon} p-5 rounded-3xl"><i data-lucide="${g.icon}" class="w-10 h-10"></i></div>
+                                    <div>
+                                        <h3 class="text-4xl font-black italic uppercase leading-none">${g.title}</h3>
+                                        <span class="${g.color} font-bold text-sm tracking-widest">${g.sub}</span>
+                                    </div>
+                                </div>
+                                <div class="grid md:grid-cols-3 gap-8 relative z-10">
+                                    <div class="md:col-span-2 space-y-6">
+                                        <p class="text-slate-300 text-lg leading-relaxed">${g.desc}</p>
+                                    </div>
+                                    <div class="flex flex-col gap-3 justify-center">
+                                        <a href="${g.link}" target="_blank" class="${g.btnClass} flex items-center justify-center gap-2 p-5 rounded-2xl font-bold text-white transition">
+                                            ${g.label} <i data-lucide="external-link"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            </script>
+        </section>
+    </main>
+
+    <footer class="bg-gradient-to-br from-slate-950 via-purple-900 to-slate-950 text-white py-20 text-center relative z-10">
+        <p class="text-6xl font-black opacity-10 mb-4 tracking-tighter">🎄 MERRY RIZZMAS 🎄</p>
+        <p class="text-slate-400 font-bold uppercase tracking-[0.5em] text-[10px]">Technical Documentation 2026</p>
+    </footer>
+
+    <script>
+        const mods = [
+            { name: "Ancient Elements", desc: "Глобальная прогрессия руд и боссов." },
+            { name: "Biomes O' Plenty", desc: "80+ новых уникальных биомов." },
+            { name: "Cold Sweat", desc: "Система температуры и выживания." },
+            { name: "Traveler's Backpack", desc: "Функциональные рюкзаки." },
+            { name: "Etched", desc: "Запись музыки на пластинки." },
+            { name: "Distant Horizons", desc: "Отрисовка чанков до горизонта." },
+            { name: "Tectonic", desc: "Реалистичный ландшафт гор." },
+            { name: "When Dungeons Arise", desc: "Масштабные данжи и замки." },
+            { name: "Embeddium", desc: "Оптимизация FPS для Forge." },
+            { name: "Oculus", desc: "Поддержка шейдеров." },
+            { name: "Snow! Real Magic!", desc: "Физика снега и накопление." },
+            { name: "Eternal Winter", desc: "Бесконечный снег." },
+            { name: "Winter Massacre", desc: "Новые виды снежков." },
+            { name: "Fairy Lights", desc: "Праздничные гирлянды." },
+            { name: "MAIDENS Merrymaking", desc: "Рождественские блоки." },
+            { name: "MOAdecor HOLIDAYS", desc: "Праздничная мебель." },
+            { name: "Emotecraft", desc: "Анимации и эмоции." },
+            { name: "FancyMenu", desc: "Кастомное главное меню." },
+            { name: "Epic Villages", desc: "Переработка деревень." },
+            { name: "JEI", desc: "Рецепты и крафты." },
+            { name: "Jade", desc: "Подсказки о блоках." },
+            { name: "Snowy", desc: "Весь мир заморожен." },
+            { name: "Advancement Plaques", desc: "Красивые ачивки." },
+            { name: "Immortal Gingerbread", desc: "Пряничные человечки." }
+        ];
+
+        function renderMods(data) {
+            const list = document.getElementById('modList');
+            list.innerHTML = data.map((m, i) => {
+                const delay = (i + 1) * 0.05;
+                return `
+                    <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 hover-lift transition-all fade-in-up" style="animation-delay: ${delay}s">
+                        <h4 class="font-black text-blue-900 mb-2">${m.name}</h4>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-tighter leading-tight">${m.desc}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterMods(val) {
+            const filtered = mods.filter(m => m.name.toLowerCase().includes(val.toLowerCase()));
+            renderMods(filtered);
+        }
+
+        // Создание снежинок (оптимизировано)
+        function createSnowflakes() {
+            const snowflakes = ['❄', '❅', '❆'];
+            for (let i = 0; i < 20; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                snowflake.style.fontSize = (Math.random() * 1 + 0.5) + 'em';
+                snowflake.style.willChange = 'transform';
+                document.body.appendChild(snowflake);
+            }
+        }
+
+        // Создание звезд (оптимизировано)
+        function createStars() {
+            for (let i = 0; i < 15; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.textContent = '✨';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.fontSize = (Math.random() * 0.5 + 0.3) + 'em';
+                document.body.appendChild(star);
+            }
+        }
+
+        // Initialize everything
+        renderGuides();
+        renderMods(mods);
+        createSnowflakes();
+        createStars();
+        lucide.createIcons();
+    </script>
+</body>
+</html>
